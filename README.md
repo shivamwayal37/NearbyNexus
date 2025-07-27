@@ -1,11 +1,11 @@
 ## Setup Instructions
 1. **Backend**:
-   - Install Java 17, Maven, MySQL, MongoDB, Redis.
+   - Install Java 21, Maven, MySQL, MongoDB, Redis.
    - Update `application.properties` with database credentials.
    - Run: `mvn spring-boot:run`
 2. **Frontend**:
    - Install Node.js, run `npm install` in `frontend`.
-   - Start: `npm start`
+   - Start: `npm run dev`
 ## Week 1 Progress
 - Initialized Spring Boot and React projects.
 - Set up MySQL and MongoDB with schemas.
