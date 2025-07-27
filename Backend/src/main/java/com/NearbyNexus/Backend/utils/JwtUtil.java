@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private String secret = "yjER2H085j7QPLWVuJ/BzzWirv+ZmESLY9c+XiLOUUo="; // Replace with a secure key
+    private String secret = System.getenv("JWT_SECRET"); // Replace with a secure key
     private int jwtExpirationMs = 86400000; // 24 hours
 
     public String generateToken(String email) {
