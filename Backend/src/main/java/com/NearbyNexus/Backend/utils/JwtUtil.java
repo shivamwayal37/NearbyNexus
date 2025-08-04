@@ -1,14 +1,17 @@
 package com.NearbyNexus.Backend.utils;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private String secret = System.getenv("JWT_SECRET"); // Replace with a secure key
+    @Value("${jwt.secret}")
+    private String secret; // Replace with a secure key
     private int jwtExpirationMs = 86400000; // 24 hours
 
     public String generateToken(String email) {
@@ -21,7 +24,13 @@ public class JwtUtil {
     }
 
     public String getEmailFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        System.out.println("Received token: " + token);
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        } catch (MalformedJwtException e) {
+            System.err.println("Malformed JWT: " + e.getMessage());
+            throw e;
+        }
     }
 
     public boolean validateToken(String token) {
@@ -29,7 +38,9 @@ public class JwtUtil {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            System.err.println("Token validation failed: " + e.getMessage());
             return false;
         }
     }
+
 }

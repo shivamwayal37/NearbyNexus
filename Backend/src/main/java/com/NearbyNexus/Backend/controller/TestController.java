@@ -24,4 +24,10 @@ public class TestController {
         redisTemplate.opsForValue().set("testKey", "testValue");
         return (String) redisTemplate.opsForValue().get("testKey");
     }
+
+    @GetMapping("/websocket")
+    public String testWebSocket() {
+        // This endpoint is just a placeholder to demonstrate WebSocket functionality
+        return "WebSocket endpoint is working";
+    }
 }
