@@ -17,47 +17,11 @@ A full-stack MVP for discovering local events and chatting with organizers in re
 - Integrated Redis caching for event listings (e.g., `events::Bangalore:Tech`) with 5-minute TTL.
 - Resolved WSL Redis connectivity issues.
 
-### Week 3 Progress
-
-- **Implemented real-time chat** using Spring WebSocket with STOMP protocol for full-duplex communication.
-  
-- **Configured WebSocket endpoints**:
-  - `/chat` WebSocket endpoint with SockJS fallback
-  - STOMP messaging routes:
-    - Subscriptions: `/topic/event/{eventId}`
-    - Message sending: `/app/chat.sendMessage`
-
-- **Security implementation**:
-  - Secured WebSocket connections with JWT-based authentication
-  - Used `AuthHandshakeInterceptor` to:
-    - Extract JWT from `Authorization` header
-    - Handle `token` query parameter for SockJS clients
-  - Validated tokens during handshake to authenticate users
-
-- **Data persistence**:
-  - Stored chat messages in MongoDB (`chat_messages` collection) using `ChatService`
-  - Message structure includes:
-    - `eventId`
-    - `userId`
-    - `content`
-    - Timestamp
-
-- **Testing & Validation**:
-  - Verified end-to-end message flow and persistence
-  - Tested with:
-    - `wscat` utility
-    - Frontend clients
-  - Confirmed functionality for:
-    - Connection establishment
-    - Topic subscription
-    - Message sending
-    - Data storage
-
-- **Bug Fixes**:
-  - Resolved `IllegalArgumentException` by validating:
-    - `eventId`
-    - `userId` 
-    - `content` in incoming `ChatMessage` payload
+## Week 3 Progress
+- Implemented real-time chat using Spring WebSocket with STOMP.
+- Configured `/chat` endpoint for event-specific chat rooms (e.g., `/topic/event/{eventId}`).
+- Stored chat messages in MongoDB (`chat_messages` collection).
+- Tested chat with `wscat` and verified message persistence.
 
 ## API Documentation
 - **POST /api/auth/register**
@@ -80,7 +44,7 @@ A full-stack MVP for discovering local events and chatting with organizers in re
 
 ## Setup Instructions
 1. **Backend**:
-   - Install Java 21, Maven, MySQL, MongoDB, Redis.
+   - Install Java 17, Maven, MySQL, MongoDB, Redis.
    - Update `application.properties` with credentials (e.g., `spring.redis.host=172.17.0.2` for WSL).
    - Run: `mvn spring-boot:run`
 2. **Frontend**:
