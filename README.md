@@ -1,9 +1,9 @@
-# Local Event Finder with Real-Time Chat
+# NearbyNexus: Local Event Finder with Real-Time Chat
 A full-stack MVP for discovering local events and chatting with organizers in real-time.
 
 ## Tech Stack
 - Backend: Spring Boot, MySQL, MongoDB, Redis, WebSockets
-- Frontend: React, Google Maps API
+- Frontend: React, Axios, SockJS, STOMP, Material-UI, Tailwind CSS
 
 ## Week 1 Progress
 - Initialized Spring Boot and React projects.
@@ -12,46 +12,50 @@ A full-stack MVP for discovering local events and chatting with organizers in re
 - Connected Redis for caching.
 
 ## Week 2 Progress
-- Implemented `Event` entity and repository for MySQL.
-- Added `/api/events` APIs for creating and listing events.
-- Integrated Redis caching for event listings (e.g., `events::Bangalore:Tech`) with 5-minute TTL.
+- Implemented `Event` entity and `/api/events` APIs.
+- Added Redis caching for event listings (e.g., `events::Bangalore:Tech`, 5-minute TTL).
 - Resolved WSL Redis connectivity issues.
 
 ## Week 3 Progress
-- Implemented real-time chat using Spring WebSocket with STOMP.
-- Configured `/chat` endpoint for event-specific chat rooms (e.g., `/topic/event/{eventId}`).
-- Stored chat messages in MongoDB (`chat_messages` collection).
-- Tested chat with `wscat` and verified message persistence.
+- Implemented real-time chat with Spring WebSocket, STOMP, and MongoDB.
+- Added `ChatService` for message persistence and retrieval.
+- Fixed WebSocket JWT authentication issues (`403`, `MalformedJwtException`).
+
+## Week 4 Progress
+- Built React Event Listing Page to fetch events from `/api/events?city=X&category=Y`.
+- Created Chat Component with WebSocket integration for real-time messaging.
+- Added Login Component to authenticate users and store JWT.
+- Tested frontend-backend integration for events and chat.
 
 ## API Documentation
-- **POST /api/auth/register**
-  - Body: `{ "email": "string", "password": "string", "role": "ATTENDEE|ORGANIZER" }`
-  - Response: `{ "token": "jwt_token" }`
 - **POST /api/auth/login**
   - Body: `{ "email": "string", "password": "string" }`
   - Response: `{ "token": "jwt_token" }`
-- **POST /api/events**
-  - Headers: `Authorization: Bearer <jwt_token>`
-  - Body: `{ "title": "string", "description": "string", "date": "2025-08-15T10:00:00", "location": "string", "latitude": number, "longitude": number, "category": "string" }`
-  - Response: Event object
 - **GET /api/events?city=X&category=Y**
   - Headers: `Authorization: Bearer <jwt_token>`
-  - Response: List of events (cached in Redis)
+  - Response: List of events
+- **GET /api/chat/{eventId}**
+  - Headers: `Authorization: Bearer <jwt_token>`
+  - Response: List of chat messages
 - **WebSocket /chat**
   - Connect: `ws://localhost:8080/chat`
+  - Headers: `Authorization: Bearer <jwt_token>`
   - Subscribe: `/topic/event/{eventId}`
   - Send: `/app/chat/{eventId}` with `{ "userId": "string", "message": "string" }`
 
 ## Setup Instructions
 1. **Backend**:
-   - Install Java 17, Maven, MySQL, MongoDB, Redis.
-   - Update `application.properties` with credentials (e.g., `spring.redis.host=172.17.0.2` for WSL).
+   - Install Java 21, Maven, MySQL, MongoDB, Redis.
+   - Update `application.properties` with credentials.
    - Run: `mvn spring-boot:run`
 2. **Frontend**:
    - Install Node.js, run `npm install` in `frontend`.
+   - Install dependencies: `npm install axios @mui/material @emotion/react @emotion/styled react-router-dom sockjs-client @stomp/stompjs`
    - Start: `npm start`
-3. **WebSocket Testing**:
-   - Install `wscat`: `npm install -g wscat`
-   - Connect: `wscat -c ws://localhost:8080/chat`
-   - Subscribe: `{"destination":"/topic/event/1","data":""}`
-   - Send: `{"destination":"/app/chat/1","data":"{\"userId\":\"1\",\"message\":\"Hello\"}"}`
+3. **Testing**:
+   - Open `http://localhost:3000`, log in, search events, and join chat.
+   - Use Postman for WebSocket: `ws://localhost:8080/chat` with `Authorization: Bearer <token>`.
+
+## Troubleshooting
+- **WebSocket 403**: Ensure valid JWT in `Authorization` header. Regenerate via `/api/auth/login`.
+- **Frontend API Errors**: Verify JWT in `localStorage` and backend running on `localhost:8080`.
