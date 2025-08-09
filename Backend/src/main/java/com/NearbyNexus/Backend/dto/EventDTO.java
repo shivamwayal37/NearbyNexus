@@ -6,8 +6,10 @@ import org.springframework.data.keyvalue.repository.KeyValueRepository;
 
 import java.time.LocalDateTime;
 
-
+@Data
 public class EventDTO {
+
+    private Long id;
     private String title;
     private String description;
     private LocalDateTime date;
@@ -15,6 +17,14 @@ public class EventDTO {
     private Double latitude;
     private Double longitude;
     private String category;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCategory() {
         return category;

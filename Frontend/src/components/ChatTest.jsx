@@ -10,10 +10,10 @@ const ChatTest = ({ eventId, jwtToken }) => {
   const clientRef = useRef(null);
 
   useEffect(() => {
-    const socketUrl = `http://localhost:8080/chat?token=${jwtToken}`;
+    // const socketUrl = `http://localhost:8080/chat?token=${jwtToken}`;
 
     const stompClient = new Client({
-      webSocketFactory: () => new SockJS(socketUrl),
+      brokerURL: `ws://localhost:8080/chat?token=${jwtToken}`,
       debug: (str) => console.log("STOMP:", str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,

@@ -20,10 +20,13 @@ public class ChatController {
     @MessageMapping("/chat/{eventId}")
     @SendTo("/topic/event/{eventId}")
     public ChatMessage sendMessage(@DestinationVariable String eventId, ChatMessage message, UsernamePrincipal principal) {
+        if (principal == null) {
+            throw new IllegalStateException("User not authenticated");
+        }
         message.setEventId(eventId);
         message.setUserId(principal.getName());// Set the sender's email from the Principal
         message.setTimestamp(new Date());
         chatService.saveMessage(message);
         return message;
     }
-}
+} 

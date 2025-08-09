@@ -37,8 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
                 .setAllowedOrigins("http://localhost:5173")
-                .addInterceptors(authHandshakeInterceptor) // Optional — you can remove if only using native WS
-                .withSockJS();
+                .addInterceptors(authHandshakeInterceptor); // Optional — you can remove if only using native WS
     }
 
     @Override
